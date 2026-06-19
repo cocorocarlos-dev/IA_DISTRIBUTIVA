@@ -1,0 +1,104 @@
+class Envio:
+    def __init__(self, codigo, destino, peso):
+        self.codigo = codigo
+        self.destino = destino
+        self.peso = peso
+
+    def __str__(self):
+        return f"{self.codigo} | {self.destino} | {self.peso} kg"
+
+
+class Vehiculo:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.envios = []
+
+    def agregar_envio(self, envio):
+        self.envios.append(envio)
+
+    def eliminar_envio(self, codigo):
+        self.envios = [e for e in self.envios if e.codigo != codigo]
+
+    def carga_total(self):
+        return sum(envio.peso for envio in self.envios)
+
+
+# Agentes inteligentes (vehículos)
+vehiculos = [
+    Vehiculo("Camión Norte"),
+    Vehiculo("Camión Centro"),
+    Vehiculo("Camión Sur")
+]
+
+
+def crear_envio():
+    codigo = input("Código: ")
+    destino = input("Destino: ")
+    peso = float(input("Peso (kg): "))
+
+    envio = Envio(codigo, destino, peso)
+
+    # IA Distribuida:
+    # El envío se asigna al vehículo con menor carga
+    mejor_vehiculo = min(vehiculos, key=lambda v: v.carga_total())
+    mejor_vehiculo.agregar_envio(envio)
+
+    print(f"\nEnvío asignado automáticamente a {mejor_vehiculo.nombre}")
+
+
+def mostrar_envios():
+    print("\n===== ENVÍOS REGISTRADOS =====")
+
+    for vehiculo in vehiculos:
+        print(f"\n🚚 {vehiculo.nombre}")
+        print(f"Carga total: {vehiculo.carga_total()} kg")
+
+        if not vehiculo.envios:
+            print("Sin envíos")
+        else:
+            for envio in vehiculo.envios:
+                print(" -", envio)
+
+
+def eliminar_envio():
+    codigo = input("Ingrese el código del envío a eliminar: ")
+
+    for vehiculo in vehiculos:
+        vehiculo.eliminar_envio(codigo)
+
+    print("Envío eliminado si existía.")
+
+
+def recolectar_envio():
+    codigo = input("Código del envío recolectado: ")
+    print(f"Envío {codigo} recolectado correctamente.")
+
+
+while True:
+    print("\n========== EMPRESA DE REPARTO ==========")
+    print("1. Crear envío")
+    print("2. Mostrar envíos")
+    print("3. Eliminar envío")
+    print("4. Recolectar envío")
+    print("5. Salir")
+
+    opcion = input("Seleccione una opción: ")
+
+    if opcion == "1":
+        crear_envio()
+
+    elif opcion == "2":
+        mostrar_envios()
+
+    elif opcion == "3":
+        eliminar_envio()
+
+    elif opcion == "4":
+        recolectar_envio()
+
+    elif opcion == "5":
+        print("Sistema finalizado.")
+        break
+
+    else:
+        print("Opción no válida.")
